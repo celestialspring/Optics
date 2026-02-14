@@ -3,7 +3,7 @@
 This script contains a class used to generate and plot field of a beam mode.
 It can generate HG mode upto 3 orders.
 Parameters are taken from a config file given as input.
-@author: SandyM
+@author: SM
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         """
 import tools 
 import numpy as np

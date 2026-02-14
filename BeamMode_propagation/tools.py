@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 
-@author: SandyM
+@author: SM
 
 A simple function to convert txt file of a given format into python dictionary
 """
