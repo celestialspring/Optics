@@ -2,7 +2,7 @@
 """
 Created on Sun Dec 28 14:42:22 2025
 
-@author: SandyM
+@author: SM
 """
 
 # HG mode propagation
