@@ -10,7 +10,7 @@ Created on Sun Dec 28 14:42:22 2025
 This project attempts to simulate free space propagation of Hermite-Gaussian mode 
 using fast fourier transform (FFT) based direct integration method (DI) 
 of Rayleigh-Sommerfeld diffraction integral. 
-It was created as part of Cailabs exercise. 
+
 
 ## Objective
 - To compute transverse profiles of a set of 2 Hermite-Gaussian modes of given orders
