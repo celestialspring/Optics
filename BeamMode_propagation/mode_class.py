@@ -78,9 +78,12 @@ class Modes():
             kbar_x = np.fft.fftshift(np.fft.fftfreq(nx, dx))
             kbar_y = np.fft.fftshift(np.fft.fftfreq(ny, dy))
         
+       #direction cosine angles
+        alpha = self.wavelength*kbar_x
+        beta = self.wavelength*kbar_y
         #wave_vectors 
-        kx = 2*np.pi*kbar_x
-        ky = 2*np.pi*kbar_y
+        kx = ((2*np.pi)/self.wavelength)*alpha
+        ky = ((2*np.pi)/self.wavelength)*beta
         kX, kY = np.meshgrid(kx, ky)
         k = (2*np.pi)/self.wavelength
         kZ = np.sqrt(k**2-kX**2-kY**2, dtype='complex')

@@ -45,6 +45,50 @@ class PropagationMethods():
     def real_space_propagator(self, k,R,z):
         self.h = (1/(2*np.pi)) * ((np.exp(1j*k*R ) * z) / R**2) * (1/R - (1j*k))
         return self.h
+    
+    def angular_spectrum(self):
+        """
+        Compute field propagated by z distance with angular spectrum method
+
+        Parameters
+        ----------
+        k : float
+            wavevector
+        kX : ndarray
+            DESCRIPTION.
+        kY : TYPE
+            DESCRIPTION.
+        kZ : TYPE
+            DESCRIPTION.
+
+        Returns
+        -------
+        ndarray
+            field after propagation in the real space
+
+        """
+        nx = ny = int(self.points)
+        z = self.z_propagation
+
+        U_pad = np.zeros((2*ny, 2*nx), dtype=complex)
+        U_pad[ny//2:ny//2+ny, nx//2:nx//2+nx] = self.field
+        
+        Ny2, Nx2 = U_pad.shape
+        dx = self.grid_size[0]/nx
+        dy = self.grid_size[1]/ny
+        fx = np.fft.fftshift(np.fft.fftfreq(Nx2, dx))
+        fy = np.fft.fftshift(np.fft.fftfreq(Ny2, dy))
+        k = (2*np.pi)/self.wavelength
+        kx, ky = np.meshgrid(2*np.pi*fx, 2*np.pi*fy)
+
+        kz = np.sqrt(k**2 - kx**2 - ky**2)
+        fft_field = np.fft.fftshift(np.fft.fft2(U_pad))
+        fft_propagatefield = fft_field*self.fourier_propagator(kz, z)
+        out_field = np.fft.ifft2(np.fft.ifftshift(fft_propagatefield))
+        self.S_shift = out_field[ny//2:ny+ny//2, nx//2:nx+nx//2]
+       
+     
+        return self.S_shift
         
     def rayleigh_sommerfeld_DI(self):
         """
@@ -193,6 +237,10 @@ if __name__ == '__main__':
     X,Y = new_mode.generate_object_plane()
     field = new_mode.field_input
     mode_propagated = PropagationMethods('mode1_config.txt', field, X, Y)
+    mode_propagated.angular_spectrum()
+    mode_propagated.plot_field('Intensity xprofile')
+    mode_propagated.plot_field('Intensity')
     mode_propagated.rayleigh_sommerfeld_DI()
     mode_propagated.plot_field('Intensity xprofile')
     mode_propagated.plot_field('Intensity')
+    
