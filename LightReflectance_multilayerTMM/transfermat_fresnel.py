@@ -50,7 +50,7 @@ class TransfermatFresnel():
             gammas = self.nsub * np.sqrt(epsilon0*mu0)*np.cos(theta_radts)
         else:
             gamma0 = n0*np.sqrt(epsilon0*mu0)/np.cos(np.radians(self.incident_angle))
-            gamma1 = (n1*np.sqrt(epsilon0*mu0))/np.cos(theta_radts)  
+            gamma1 = (n1*np.sqrt(epsilon0*mu0))/np.cos(theta_radt1)  
             gammas = self.nsub * np.sqrt(epsilon0*mu0)/np.cos(theta_radts)
         
         m11 = np.cos(delta)

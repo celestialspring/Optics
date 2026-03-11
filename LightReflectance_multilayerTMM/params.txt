@@ -3,4 +3,4 @@
 'incident_angle':      0 #in degree
 'nsubstrate':          3.4193 # float, n of substrate
 'n1':	               2.40 #float or complex
-'t1':		       1E-6 # layer1 thickness in meters
+'t1':		       1.05E-6 # layer1 thickness in meters
