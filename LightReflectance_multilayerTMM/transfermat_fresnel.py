@@ -24,22 +24,52 @@ class TransfermatFresnel():
         self.incident_angle = int(self.paramdict['incident_angle'])
         self.nsub = self.paramdict['nsubstrate']
         self.nt_tupslist = []
-        if self.layers >= 1:
-            if not len(self.paramdict)-4 == 2*self.layers: #each layer must have two inputs n,t
-                print('Data insufficient considering the case of only a single layer')
-                self.nt_tupslist.append((self.paramdict['n1'],self.paramdict['t1']))
-            else:
-                for N in range(self.layers):
-                    n_num = 'n'+str(N+1)
-                    t_num = 't'+str(N+1)
-                    self.nt_tupslist.append((self.paramdict[n_num],self.paramdict[t_num]))  
+       
+        if self.layers == 1:
+            for N in range(self.layers):
+                n_num = 'n'+str(N+1)
+                t_num = 't'+str(N+1)
+                self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))  
+                print(' considering n0 as air')
+        else:        
+            if self.layers > 1:
+                if not len(self.paramdict)-4 == 2*self.layers: #each layer must have two inputs n,t
+                    print('Data insufficient considering the case of 2 layers with air(n0)-n1')
+                    self.nt_tupslist.append((complex(self.paramdict['n1']),self.paramdict['t1']))
+                else:
+                    for N in range(self.layers):
+                        n_num = 'n'+str(N)
+                        t_num = 't'+str(N)
+                        self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))  
                     
                 
-    def singlelayer_TMM(self, polarisation: str):
+    def singlelayer_TMM(self, polarisation: str, l0='air'):
+        '''
+        Transfer matrix method to calculate the R and T of a single layer 
+        Parameters
+        ----------
+        polarisation : str
+            TE or TM
+        l0 : str, optional
+            layer from which light is incident. The default is 'air'.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        '''
         
-        n0 = 1
-        n1, t1 = self.nt_tupslist[0]
-        k0 = (2*np.pi)/self.wavelength
+        if l0 =='air':
+            n0 = 1
+            k0 = (2*np.pi)/self.wavelength
+            n1, t1 = self.nt_tupslist[0]
+        else:
+            n0, t0 = self.nt_tupslist[0]
+            n1, t1 = self.nt_tupslist[1]
+            k0 = (2*np.pi*n0)/self.wavelength
+        
+        
         theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
         theta_radts = np.arcsin((n1*np.sin(theta_radt1))/self.nsub)
         delta =  n1*k0*t1*np.cos(theta_radt1)
@@ -71,9 +101,57 @@ class TransfermatFresnel():
         T= round(1- R,4)
         return {'r': r, 't':t, 'R': R, 'T': T}
     
+    def fresnel_interface(self, polarisation:str, l0='air'):
+        '''
+        Fresnel calculation to estimate T and R at the boundary
+        Parameters
+        ----------
+        polarisation : str
+            TE or TM
+        l0 : str, optional
+            layer from which light is incident. The default is 'air'.
+
+        Returns
+        -------
+        dict
+            DESCRIPTION.
+
+        '''
+        
+        if l0 =='air':
+            n0 = 1
+            k0 = (2*np.pi)/self.wavelength
+            n1, t1 = self.nt_tupslist[0]
+        else:
+            n0, t0 = self.nt_tupslist[0]
+            n1, t1 = self.nt_tupslist[1]
+            k0 = (2*np.pi*n0)/self.wavelength
+ 
+        theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
+
+      
+        if polarisation == 'TE':
+           r_num = n0*np.cos(np.radians(self.incident_angle))-n1*np.cos(theta_radt1)
+           r_denom =  n0*np.cos(np.radians(self.incident_angle))+n1*np.cos(theta_radt1)
+           
+           r = r_num/r_denom
+           t = 1 + r
+        else:
+           r_num = -n1*np.cos(np.radians(self.incident_angle))+n0*np.cos(theta_radt1)
+           r_denom =  n1*np.cos(np.radians(self.incident_angle))+n0*np.cos(theta_radt1)
+           
+           r = r_num/r_denom
+           t = (n0*(1 - r))/n1
+    
+        R= round(abs(r)**2,4)
+        T= round(1- R,4)
+        
+        return {'r': r, 't':t, 'R': R, 'T': T}
+    
 if __name__ =='__main__':
     layer1 = TransfermatFresnel('params.txt')
     print(layer1.singlelayer_TMM('TE'))
+    print(layer1.fresnel_interface('TM'))
         
         
         
