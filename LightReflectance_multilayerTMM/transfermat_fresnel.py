@@ -11,7 +11,7 @@ import numpy as np
 epsilon0 = 8.854*10**(-12) #F m-1
 mu0 = 4*np.pi*10**(-7) # N A-2
  
-class TransfermatFresnel():
+class TransferMatFresnel():
     
     def __init__(self, configfile: str):
         self.loadparam(configfile)
@@ -25,14 +25,18 @@ class TransfermatFresnel():
         self.nsub = self.paramdict['nsubstrate']
         self.nt_tupslist = []
        
-        if self.layers == 1:
-            for N in range(self.layers):
-                n_num = 'n'+str(N+1)
-                t_num = 't'+str(N+1)
-                self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))  
-                print(' considering n0 as air')
+        if self.layers == 2:
+            
+                for N in range(self.layers):
+                    n_num = 'n'+str(N)
+                    t_num = 't'+str(N)
+                    try:
+                        self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))
+                    except:
+                        print(' considering n0 as air')
+                        continue
         else:        
-            if self.layers > 1:
+            if self.layers > 2:
                 if not len(self.paramdict)-4 == 2*self.layers: #each layer must have two inputs n,t
                     print('Data insufficient considering the case of 2 layers with air(n0)-n1')
                     self.nt_tupslist.append((complex(self.paramdict['n1']),self.paramdict['t1']))
@@ -43,15 +47,15 @@ class TransfermatFresnel():
                         self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))  
                     
                 
-    def singlelayer_TMM(self, polarisation: str, l0='air'):
+    def singlelayer_TMM(self, polarisation: str):
         '''
-        Transfer matrix method to calculate the R and T of a single layer 
+        Transfer matrix method to calculate the R and T of a single thin layer comparable
+        to wavelength
         Parameters
         ----------
         polarisation : str
             TE or TM
-        l0 : str, optional
-            layer from which light is incident. The default is 'air'.
+    
 
         Returns
         -------
@@ -60,7 +64,7 @@ class TransfermatFresnel():
 
         '''
         
-        if l0 =='air':
+        if len(self.nt_tupslist)==1:
             n0 = 1
             k0 = (2*np.pi)/self.wavelength
             n1, t1 = self.nt_tupslist[0]
@@ -96,20 +100,19 @@ class TransfermatFresnel():
         t= t_num/denom
         r = r_num/denom
         
-        #transmissitance and reflectance
+        #transmissitance and reflectance #coherent case or t~lambda
         R= round(abs(r)**2,4)
         T= round(1- R,4)
+   
         return {'r': r, 't':t, 'R': R, 'T': T}
     
-    def fresnel_interface(self, polarisation:str, l0='air'):
+    def fresnel_interface(self, polarisation:str):
         '''
         Fresnel calculation to estimate T and R at the boundary
         Parameters
         ----------
         polarisation : str
             TE or TM
-        l0 : str, optional
-            layer from which light is incident. The default is 'air'.
 
         Returns
         -------
@@ -118,7 +121,7 @@ class TransfermatFresnel():
 
         '''
         
-        if l0 =='air':
+        if len(self.nt_tupslist)==1:
             n0 = 1
             k0 = (2*np.pi)/self.wavelength
             n1, t1 = self.nt_tupslist[0]
@@ -147,11 +150,19 @@ class TransfermatFresnel():
         T= round(1- R,4)
         
         return {'r': r, 't':t, 'R': R, 'T': T}
-    
+
+    def multilayer_TMM(self):
+        
+        if self.layers > 2:
+            if self.layers == len(self.nt_tupslist):
+                'if all layers are specified'
+                
+
 if __name__ =='__main__':
-    layer1 = TransfermatFresnel('params.txt')
-    print(layer1.singlelayer_TMM('TE'))
+    layer1 = TransferMatFresnel('params.txt')
+    print(layer1.singlelayer_TMM('TM'))
     print(layer1.fresnel_interface('TM'))
+
         
         
         
