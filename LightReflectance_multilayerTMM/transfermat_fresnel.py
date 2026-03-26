@@ -33,18 +33,24 @@ class TransferMatFresnel():
                     try:
                         self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))
                     except:
-                        print(' considering n0 as air')
-                        continue
-        else:        
-            if self.layers > 2:
-                if not len(self.paramdict)-4 == 2*self.layers: #each layer must have two inputs n,t
-                    print('Data insufficient considering the case of 2 layers with air(n0)-n1')
-                    self.nt_tupslist.append((complex(self.paramdict['n1']),self.paramdict['t1']))
-                else:
-                    for N in range(self.layers):
-                        n_num = 'n'+str(N)
-                        t_num = 't'+str(N)
-                        self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))  
+                        if n_num == 'n0':
+                            print(' considering n0 as air')
+                            n0 = 1
+                            t0 = 0
+                            self.nt_tupslist.append((complex(n0),t0))
+                            continue
+        elif self.layers > 2:  
+    
+            if not len(self.paramdict)-4 == 2*self.layers: #each layer must have two inputs n,t
+                print('Data insufficient considering the case of 2 layers with air(n0)-n1')
+                self.nt_tupslist.append((complex(self.paramdict['n1']),self.paramdict['t1']))
+            else:
+                for N in range(self.layers):
+                    n_num = 'n'+str(N)
+                    t_num = 't'+str(N)
+                    self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num])) 
+        else:
+            raise Exception('Number of layers must be at least 2')        
                     
                 
     def singlelayer_TMM(self, polarisation: str):
@@ -64,14 +70,10 @@ class TransferMatFresnel():
 
         '''
         
-        if len(self.nt_tupslist)==1:
-            n0 = 1
-            k0 = (2*np.pi)/self.wavelength
-            n1, t1 = self.nt_tupslist[0]
-        else:
-            n0, t0 = self.nt_tupslist[0]
-            n1, t1 = self.nt_tupslist[1]
-            k0 = (2*np.pi*n0)/self.wavelength
+     
+        n0, t0 = self.nt_tupslist[0]
+        n1, t1 = self.nt_tupslist[1]
+        k0 = (2*np.pi*n0)/self.wavelength
         
         
         theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
@@ -120,15 +122,10 @@ class TransferMatFresnel():
             DESCRIPTION.
 
         '''
-        
-        if len(self.nt_tupslist)==1:
-            n0 = 1
-            k0 = (2*np.pi)/self.wavelength
-            n1, t1 = self.nt_tupslist[0]
-        else:
-            n0, t0 = self.nt_tupslist[0]
-            n1, t1 = self.nt_tupslist[1]
-            k0 = (2*np.pi*n0)/self.wavelength
+     
+        n0, t0 = self.nt_tupslist[0]
+        n1, t1 = self.nt_tupslist[1]
+        k0 = (2*np.pi*n0)/self.wavelength
  
         theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
 
