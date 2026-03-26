@@ -1,5 +1,5 @@
 'wavelength':          10.6E-6 #in meters
-'layers':	       1 #int
+'layers':	       2 #int
 'incident_angle':      0 #in degree
 'nsubstrate':          3.4193 # float, n of substrate
 'n1':	               2.40 #float or complex
