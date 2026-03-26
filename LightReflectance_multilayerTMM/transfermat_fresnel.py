@@ -80,7 +80,7 @@ class TransferMatFresnel():
         
         n0, t0 = self.nt_tupslist[0]
         n1, t1 = self.nt_tupslist[1]
-        k0 = (2*np.pi*n0)/self.wavelength
+        k0 = (2*np.pi)/self.wavelength
         
         
         theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
