@@ -1,6 +1,10 @@
-'wavelength':          10.6E-6 #in meters
-'layers':	       2 #int
-'incident_angle':      0 #in degree
-'nsubstrate':          3.4193 # float, n of substrate
-'n1':	               2.40 #float or complex
-'t1':		       1.05E-6 # layer1 thickness in meters
+'wavelength':          600E-9 #in meters
+'layers':	       3 #int
+'incident_angle':      45 #in degree
+'nsubstrate':          1.5 # float, n of substrate
+'n1':                  2.4     #float
+'t1':                  50E-9   #layer1 thickness in meters
+'n2':                  1.45    #float
+'t2':                  100E-9  #layer2 thickness in meters
+'n3':                  2.4     #float
+'t3':                  50E-9   #layer3 thickness in meters

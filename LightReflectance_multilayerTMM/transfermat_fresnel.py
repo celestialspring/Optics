@@ -48,7 +48,15 @@ class TransferMatFresnel():
                 for N in range(self.layers):
                     n_num = 'n'+str(N)
                     t_num = 't'+str(N)
-                    self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num])) 
+                    try:
+                        self.nt_tupslist.append((complex(self.paramdict[n_num]),self.paramdict[t_num]))
+                    except:
+                        if n_num == 'n0':
+                            print(' considering n0 as air')
+                            n0 = 1
+                            t0 = 0
+                            self.nt_tupslist.append((complex(n0),t0))
+                            continue
         else:
             raise Exception('Number of layers must be at least 2')        
                     
@@ -70,7 +78,6 @@ class TransferMatFresnel():
 
         '''
         
-     
         n0, t0 = self.nt_tupslist[0]
         n1, t1 = self.nt_tupslist[1]
         k0 = (2*np.pi*n0)/self.wavelength
@@ -125,7 +132,7 @@ class TransferMatFresnel():
      
         n0, t0 = self.nt_tupslist[0]
         n1, t1 = self.nt_tupslist[1]
-        k0 = (2*np.pi*n0)/self.wavelength
+        k0 = (2*np.pi)/self.wavelength
  
         theta_radt1 = np.arcsin((n0*np.sin(np.radians(self.incident_angle)))/n1)
 
@@ -148,17 +155,68 @@ class TransferMatFresnel():
         
         return {'r': r, 't':t, 'R': R, 'T': T}
 
-    def multilayer_TMM(self):
+    def multilayer_TMM(self, polarisation:str):
         
-        if self.layers > 2:
+        n0, t0 = self.nt_tupslist[0]
+        k0 = (2*np.pi)/self.wavelength
+        S = n0*np.sin(np.radians(self.incident_angle))
+        M_total = np.array([[1.0 + 0j, 0.0 + 0j], 
+                        [0.0 + 0j, 1.0 + 0j]])
+        
+        if polarisation == 'TE':
+            gamma0 = n0*np.sqrt(epsilon0*mu0)*np.cos(np.radians(self.incident_angle))
+            gammas = np.sqrt(epsilon0*mu0)* np.sqrt(self.nsub**2-S**2)
+        else:
+            gamma0 = n0*np.sqrt(epsilon0*mu0)/np.cos(np.radians(self.incident_angle))
+            gammas = self.nsub**2 * np.sqrt(epsilon0*mu0)/np.sqrt(self.nsub**2-S**2)
+        
+        if self.layers >= 2:
             if self.layers == len(self.nt_tupslist):
-                'if all layers are specified'
+                for i in range(len(self.nt_tupslist)):
+                    if i == 0:
+                        continue
+                    else:
+                        n,t = self.nt_tupslist[i]
+                        if polarisation == 'TE':
+                            gamma_j = np.sqrt(epsilon0*mu0)*np.sqrt(n**2 - S**2)
+                        else: 
+                            gamma_j = n**2*np.sqrt(epsilon0*mu0) / (np.sqrt(n**2 - S**2))
+                        delta_j = k0*t*np.sqrt(n**2-S**2)
+                        M11 = np.cos(delta_j)
+                        M12 = 1j*np.sin(delta_j)/(gamma_j)
+                        M21 = 1j*gamma_j*np.sin(delta_j)
+                        M22 = np.cos(delta_j)
+                        M_j = np.array([[M11,M12],
+                                        [M21, M22]])
+                        M_total = M_total @ M_j
+                                        
+                M11_tot = M_total[0, 0]
+                M12_tot = M_total[0, 1]
+                M21_tot = M_total[1, 0]
+                M22_tot = M_total[1, 1]
+    
+               
+                t_num = 2 * gamma0
+                denom = (gamma0 * M11_tot) + (gamma0 * gammas * M12_tot) + M21_tot + (gammas * M22_tot)
+                r_num = (gamma0 * M11_tot) + (gamma0 * gammas * M12_tot) - M21_tot - (gammas * M22_tot)
                 
+                #transmission and reflection coefficients
+                t= t_num/denom
+                r = r_num/denom
+                
+                #transmissitance and reflectance #coherent case or t~lambda
+                R= round(abs(r)**2,4)
+                T= round(1- R,4)
+   
+        return {'r': r, 't':t, 'R': R, 'T': T}
+        
+   
 
 if __name__ =='__main__':
     layer1 = TransferMatFresnel('params.txt')
-    print(layer1.singlelayer_TMM('TM'))
-    print(layer1.fresnel_interface('TM'))
+    # print(layer1.singlelayer_TMM('TM'))
+    # print(layer1.fresnel_interface('TM'))
+    print(layer1.multilayer_TMM('TM'))
 
         
         
