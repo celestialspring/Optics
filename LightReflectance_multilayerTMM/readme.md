@@ -4,9 +4,9 @@
 @author: SM
 """
 
-# Tranfer matrix approach and Fresnel equations for finding Transmission and Reflection coefficients
+# Tranfer matrix approach and Fresnel equations 
 
-The script `transfermat_fresnel.py` contains a class `TransferMatFresnel()` that has methods to calculate T and R coefficients. 
+The script `transfermat_fresnel.py` contains a class `TransferMatFresnel()` that has methods to calculate transmission and reflection coefficients. 
 
 
 ## Objective
