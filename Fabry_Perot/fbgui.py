@@ -16,8 +16,9 @@ import tkinter as tk
 import numpy as np
 from Modules import transfermat_fresnel
 from Modules import fabryperot
-
-import tkinter as tk
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
+NavigationToolbar2Tk)
 
 
 
@@ -38,12 +39,13 @@ def setup_gui():
 
     global r_calc, t_calc, wavelength, cavitylength 
     global f_val, f_entry, cf_val, cf_entry, tr_val, tr_entry, root
-
+    global ax, fig, canvas 
+    
     root = tk.Tk()
     tab_label = tk.Label(text='Fabry-Perot GUI')
     tab_label.grid()
-
-
+    root.columnconfigure(0, weight=1)
+    root.rowconfigure(4, weight=1)
     rtframe = tk.Frame(root, bg='grey', borderwidth=2, 
                                  relief=tk.GROOVE, padx=2, pady=2) 
     rtframe.grid(row=1, column=0,  sticky="NSEW") 
@@ -107,7 +109,7 @@ def setup_gui():
 
     calculate_button = tk.Button(calculate_frame, text='Compute', width=9, height=3, bg='gray', command=compute_results)
     calculate_button.grid(row=0, column=0, sticky='NSEW')
-
+    fig, ax, canvas = set_fig(root)
     return root
 
 def compute_results():
@@ -134,10 +136,41 @@ def compute_results():
         tr_val.set(round(Transmittance,4))
         tr_entry.config(state='readonly')
         
+        plot('roundtrip', ax, canvas, fbclass)
+        
     except Exception as e:
         print(f"Calculation Error: {e}")
+    
 
+def set_fig( window):
+    
+    fig = Figure(figsize=(5,5), dpi=100)
+    ax = fig.add_subplot(111)
+    
+    canvas = FigureCanvasTkAgg(fig, master=window)
+    canvas.get_tk_widget().grid(row=4,column=0,sticky='NSEW')
+        
+    return fig, ax, canvas
 
+def plot(graphtype:str, ax, canvas, fbclass):
+    ax.clear()
+    
+    if graphtype == 'roundtrip':
+       
+        roundtrips = 10
+        delta_arr = np.linspace(0, roundtrips * 2 * np.pi, 1000)
+        F = fbclass.coeff_Of_finesse()
+        T_arr = fbclass.transmittance_phase_in(F, delta_arr)
+
+        ax.plot(delta_arr / (2 * np.pi), T_arr, linestyle='dotted', color='blue')
+        ax.set_title("Transmittance vs. Phase")
+        ax.set_xlabel("Roundtrips")
+        ax.set_xlim(0, roundtrips)
+
+    ax.set_ylabel("Transmittance (T)")
+    ax.grid(True)
+    canvas.draw()
+        
 if __name__ == '__main__':
 
     main_window = setup_gui()
@@ -145,7 +178,6 @@ if __name__ == '__main__':
     
     r_calc.set(r_val_start)
     t_calc.set(t_val_start)
-    
     main_window.mainloop()
 
 
