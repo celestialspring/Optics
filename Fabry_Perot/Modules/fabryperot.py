@@ -38,4 +38,6 @@ class FabryPerot():
         T = 1/(1+F*np.sin(delta/2)**2)
         return T
     
-        
+    def transmittance_phase_in(self, F, delta=2*np.pi):
+        T = 1/(1+F*np.sin(delta/2)**2)
+        return T
