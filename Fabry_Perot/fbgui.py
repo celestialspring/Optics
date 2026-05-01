@@ -158,7 +158,7 @@ def plot(graphtype:str, ax, canvas, fbclass):
     if graphtype == 'roundtrip':
        
         roundtrips = 10
-        delta_arr = np.linspace(0, roundtrips * 2 * np.pi, 1000)
+        delta_arr = np.linspace(0, roundtrips * 2 * np.pi, 4000)
         F = fbclass.coeff_Of_finesse()
         T_arr = fbclass.transmittance_phase_in(F, delta_arr)
 
