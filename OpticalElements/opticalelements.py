@@ -14,9 +14,9 @@ class Opticalelements():
         self.params = kwargs
         
     
-    def rectslit(self, x_aperture,y_aperture, width):
-        x_var = x_aperture/(width)
-        y_var = y_aperture/(width)
+    def rectslit(self, x_grid,y_grid, slitwidth):
+        x_var = x_grid/(slitwidth)
+        y_var = y_grid/(slitwidth)
         x_rect = Opticalelements.rectfunc(x_var)
         y_rect = Opticalelements.rectfunc(y_var)
         
