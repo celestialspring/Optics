@@ -14,9 +14,9 @@ class Opticalelements():
         self.params = kwargs
         
     
-    def rectslit(self, x_grid,y_grid, slitwidth):
-        x_var = x_grid/(slitwidth)
-        y_var = y_grid/(slitwidth)
+    def rectslit(self, x_grid,y_grid, slitwidthx, slitwidthy):
+        x_var = x_grid/(slitwidthx)
+        y_var = y_grid/(slitwidthy)
         x_rect = Opticalelements.rectfunc(x_var)
         y_rect = Opticalelements.rectfunc(y_var)
         
@@ -38,7 +38,7 @@ if __name__ == '__main__':
 
     X,Y = np.meshgrid(x,y)
     clss = Opticalelements()
-    xr, yr = clss.rectslit(X,Y, 100E-6)
+    xr, yr = clss.rectslit(X,Y, 100E-5)
     mask = xr*yr
     plt.figure()
     plt.imshow(mask, extent=[np.min(x), np.max(x), np.min(y), np.max(y)])

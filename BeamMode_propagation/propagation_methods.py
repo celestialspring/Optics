@@ -186,7 +186,17 @@ class PropagationMethods():
             plt.ylabel('y')
             plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} field intensity, z={self.z_propagation} m')
             plt.show()
-        
+            
+        if plot_type == 'Intensity norm':
+            plt.figure()
+            field_intensity = (abs(self.S_shift))**2
+            plt.imshow(field_intensity/np.max(field_intensity),extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)])
+            plt.colorbar(label='Intensity')
+            plt.xlabel('x')
+            plt.ylabel('y')
+            plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} field intensity norm, z={self.z_propagation} m')
+            plt.show()
+            
         if plot_type == 'Intensity xprofile':
             
             field_intensity = (abs(self.S_shift))**2
@@ -198,6 +208,18 @@ class PropagationMethods():
             plt.xlabel('x')
             plt.ylabel('Intensity')
             plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} intensity profile, z={self.z_propagation} m')
+            plt.show()
+        if plot_type == 'Intensity norm xprofile':
+            
+            field_intensity = (abs(self.S_shift))**2
+            nxi, nyi = field_intensity.shape
+            mid_y = nyi // 2
+            inter_x =0.5 * (X[0, :-1] + X[0, 1:])#grid points at vertices, Intensity at mid_points
+            plt.figure()
+            plt.plot(X[0,:], field_intensity[mid_y, :]/np.max(field_intensity))
+            plt.xlabel('x')
+            plt.ylabel('Intensity')
+            plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} norm intensity profile, z={self.z_propagation} m')
             plt.show()
 
 def two_mode_overlap(mode1, mode2, xgrid, ygrid):
