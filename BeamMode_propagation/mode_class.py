@@ -141,6 +141,7 @@ class Modes():
                     print(f'f_max > f_s/2, fmax = {f_max}, fsx ={fsx}, fsy ={fsy}')
                 if lx < (4*self.beam_waistr) or ly < (4*self.beam_waistr):
                     print(f'grid size < 4*beam_waist, 4*w0 ={4*self.beam_waistr}')
+    
         
     def select_mode(self):
         """
@@ -155,8 +156,19 @@ class Modes():
             self.X, self.Y = self.generate_object_plane()
             z = 0 
             self.sampling_check()
-            return self.mode_hg(self.X,self.Y,z)
             
+            return self.mode_hg(self.X,self.Y,z) 
+            
+    def field_transmittance(self, field_init, transmitfunc = 1):
+        if isinstance(transmitfunc, int) or isinstance(transmitfunc, float):
+            field_out = field_init*transmitfunc
+        else:
+            try:
+                field_out = field_init*transmitfunc
+            except Exception as e:
+                print(f'error: {e}')
+                field_out = field_init
+        return field_out 
     
     def hermite_function(self, order:int, x):
         """
