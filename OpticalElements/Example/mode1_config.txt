@@ -1,6 +1,6 @@
 'mode_type':           Hermite-Gaussian #
 'wavelength':          1000E-9 #in meters
-'field_amplitude':     1 #constant amplitude of field
+'field_amplitude':     10 #constant amplitude of field
 'waist_radius':        1E-3 #in meters
 'n_m':		       (0,0) #n,m order of hermite polynomial upto(3,3)
 'sample_points':       2000 #

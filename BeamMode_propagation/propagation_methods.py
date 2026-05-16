@@ -189,9 +189,11 @@ class PropagationMethods():
             
         if plot_type == 'Intensity norm':
             plt.figure()
-            field_intensity = (abs(self.S_shift))**2
-            plt.imshow(field_intensity/np.max(field_intensity),extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)])
-            plt.colorbar(label='Intensity')
+            field_intensity = (abs(self.S_shift))**2//np.max(abs(self.S_shift))
+            max_val = np.max(field_intensity)*0.2
+            plt.imshow(field_intensity,extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)], 
+                       vmax=max_val)
+            plt.colorbar(label='Intensity norm and clipped')
             plt.xlabel('x')
             plt.ylabel('y')
             plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} field intensity norm, z={self.z_propagation} m')

@@ -31,7 +31,23 @@ class Opticalelements():
           output[np.abs(x) > 0.5] = 0
 
         return output
-
+    
+    @staticmethod
+    def circfunc(r):
+        if isinstance(r, np.ndarray):
+            output = np.zeros_like(r, dtype=float)
+            output[r == 1] = 0.5
+            output[r < 1 ] = 1
+        
+        return output
+    
+    def circslit(self, x_grid, y_grid, slit_diameter):
+        r = np.sqrt(x_grid**2+y_grid**2)
+        circ_var = (2*r)/slit_diameter
+        circ_slit = Opticalelements.circfunc(circ_var)
+        
+        return circ_slit
+    
 if __name__ == '__main__':
     x = np.linspace(0,8E-3,100) -4E-3
     y = np.linspace(0,8E-3,100) -4E-3
