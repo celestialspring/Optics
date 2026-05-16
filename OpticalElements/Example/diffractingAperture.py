@@ -25,7 +25,7 @@ x,y = new_mode.generate_object_plane()
 
 #Specifying rectangular aperture
 slit_widthx = 1E-4
-slit_widthy = 0.2E-4
+slit_widthy = 0.5E-4
 rect_obj = opticalelements.Opticalelements()
 #Circular slit parameters
 slit_d = 1E-4
