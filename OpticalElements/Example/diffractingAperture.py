@@ -26,10 +26,10 @@ x,y = new_mode.generate_object_plane()
 #Specifying rectangular aperture
 slit_widthx = 1E-4
 slit_widthy = 0.5E-4
-rect_obj = opticalelements.Opticalelements()
+rect_obj = opticalelements.OpticalElements()
 #Circular slit parameters
 slit_d = 1E-4
-circ_obj = opticalelements.Opticalelements()
+circ_obj = opticalelements.OpticalElements()
 
 
 #specify transmittance function either rectangular or circular (pass circ_t array to transmittance)

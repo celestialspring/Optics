@@ -8,7 +8,7 @@ import numpy as np
 import tools
 import matplotlib.pyplot as plt
 
-class Opticalelements():
+class OpticalElements():
     
     def __init__(self, **kwargs):
         self.params = kwargs
