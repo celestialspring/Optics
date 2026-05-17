@@ -17,8 +17,8 @@ class OpticalElements():
     def rectslit(self, x_grid,y_grid, slitwidthx, slitwidthy):
         x_var = x_grid/(slitwidthx)
         y_var = y_grid/(slitwidthy)
-        x_rect = Opticalelements.rectfunc(x_var)
-        y_rect = Opticalelements.rectfunc(y_var)
+        x_rect = OpticalElements.rectfunc(x_var)
+        y_rect = OpticalElements.rectfunc(y_var)
         
         return x_rect, y_rect 
     
@@ -44,7 +44,7 @@ class OpticalElements():
     def circslit(self, x_grid, y_grid, slit_diameter):
         r = np.sqrt(x_grid**2+y_grid**2)
         circ_var = (2*r)/slit_diameter
-        circ_slit = Opticalelements.circfunc(circ_var)
+        circ_slit = OpticalElements.circfunc(circ_var)
         
         return circ_slit
     
