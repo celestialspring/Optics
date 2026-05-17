@@ -37,3 +37,8 @@ An example of the inputs required in a .txt file is shown in the following:
 ### Diffraction from rectangular slit (100 um x 50 um) after a propagation of 10 cm
 
 ![Alt text](./Example/rectangular_slit_diffraction.png)
+
+### Diffraction from circular slit (100 um) after a propagation of 10 cm
+
+![Alt text](./Example/circular_slit_diffraction.png)
+

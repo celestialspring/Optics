@@ -190,7 +190,7 @@ class PropagationMethods():
         if plot_type == 'Intensity norm':
             plt.figure()
             field_intensity = (abs(self.S_shift))**2//np.max(abs(self.S_shift))
-            max_val = np.max(field_intensity)*0.2
+            max_val = np.max(field_intensity)*0.15
             plt.imshow(field_intensity,extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)], 
                        vmax=max_val)
             plt.colorbar(label='Intensity norm and clipped')
