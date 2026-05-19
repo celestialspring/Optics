@@ -19,6 +19,7 @@ import propagation_methods
 #Initialize field
 new_mode = mode_class.Modes('mode1_config.txt')
 print(new_mode)
+wavelength = new_mode.wavelength
 field_init = new_mode.field_input
 new_mode.plot_field('Intensity')
 x,y = new_mode.generate_object_plane()
@@ -26,15 +27,14 @@ x,y = new_mode.generate_object_plane()
 #Specifying rectangular aperture
 slit_widthx = 1E-4
 slit_widthy = 0.5E-4
-rect_obj = opticalelements.OpticalElements()
+el_obj = opticalelements.OpticalElements()
 #Circular slit parameters
 slit_d = 1E-4
-circ_obj = opticalelements.OpticalElements()
 
 
 #specify transmittance function either rectangular or circular (pass circ_t array to transmittance)
-xt, yt = rect_obj.rectslit(x,y, slit_widthx, slit_widthy)
-circ_t = circ_obj.circslit(x, y, slit_d )
+xt, yt = el_obj.rectslit(x,y, slit_widthx, slit_widthy)
+circ_t = el_obj.circslit(x, y, slit_d )
 
 transmittance = xt*yt
 
