@@ -48,12 +48,23 @@ class OpticalElements():
         
         return circ_slit
     
+    def paraxlensphase(self, wavelength, focallength, x_grid, y_grid,
+                       lens_index=1.51, lens_diameter=1E-3, thickness=9E-3):
+        
+        k = (2*np.pi)/wavelength
+        if focallength == 0:
+            phase = np.exp(1j*k*lens_index*thickness)
+        else:
+            phase = np.exp(1j*k*lens_index*thickness)*np.exp(-1j*np.pi*(x_grid**2+y_grid**2)/(wavelength*focallength)) 
+        
+        return phase
+    
 if __name__ == '__main__':
     x = np.linspace(0,8E-3,100) -4E-3
     y = np.linspace(0,8E-3,100) -4E-3
 
     X,Y = np.meshgrid(x,y)
-    clss = Opticalelements()
+    clss = OpticalElements()
     xr, yr = clss.rectslit(X,Y, 100E-5)
     mask = xr*yr
     plt.figure()
