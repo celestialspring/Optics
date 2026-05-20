@@ -82,10 +82,11 @@ class Modes():
         alpha = self.wavelength*kbar_x
         beta = self.wavelength*kbar_y
         #wave_vectors 
-        kx = ((2*np.pi)/self.wavelength)*alpha
-        ky = ((2*np.pi)/self.wavelength)*beta
-        kX, kY = np.meshgrid(kx, ky)
         k = (2*np.pi)/self.wavelength
+        kx = k*alpha
+        ky = k*beta
+        kX, kY = np.meshgrid(kx, ky)
+       
         kZ = np.sqrt(k**2-kX**2-kY**2, dtype='complex')
         
         return k, kX, kY, kZ
