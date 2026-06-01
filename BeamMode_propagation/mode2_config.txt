@@ -5,4 +5,4 @@
 'n_m':		       (2,0) #n,m order of hermite polynomial upto(3,3)
 'sample_points':       500 #
 'grid_size':           (4E-3,4E-3) # meters 
-'propagation_distance': 20E-1 #in meters
+'propagation_distance': 50E-1 #in meters

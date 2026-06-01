@@ -57,6 +57,14 @@ In the script `simulate_modes.py`, the outputs are:
   a 2D image of the mode after propagation are plotted
 - Scalar value of overlap integral
 
+### HG mode (2,0) before propagation
+
+![Alt text](./mode_init.png)
+
+### HG mode (2,0) after a propagation of distance 5 m
+
+![Alt text](./mode_end_5m.png)
+
 ### How to run
 From a terminal, once in the directory of the script, run:
 ```python
