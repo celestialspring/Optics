@@ -4,6 +4,7 @@
 
 @author: SM
 """
+from PIL import Image 
 import numpy as np 
 import tools
 import matplotlib.pyplot as plt
@@ -59,15 +60,38 @@ class OpticalElements():
         
         return phase
     
+    def image_amplitude_mask(self, filename:str,threshold):
+        
+        img = Image.open(filename)
+        
+        print(f'type is {type(img)}, {img.size}')
+        img_array = np.array(img) / 255
+        binary_arr = np.zeros_like(img_array, dtype=float)
+        binary_arr[img_array>threshold] = 1
+        binary_arr[img_array<threshold] = 0
+        
+        return img_array, binary_arr
+    
 if __name__ == '__main__':
     x = np.linspace(0,8E-3,100) -4E-3
     y = np.linspace(0,8E-3,100) -4E-3
 
     X,Y = np.meshgrid(x,y)
     clss = OpticalElements()
-    xr, yr = clss.rectslit(X,Y, 100E-5)
+    xr, yr = clss.rectslit(X,Y, 100E-5,100E-5)
     mask = xr*yr
     plt.figure()
     plt.imshow(mask, extent=[np.min(x), np.max(x), np.min(y), np.max(y)])
     plt.colorbar()
+    plt.show()
+    
+    img_array, amplitude_mask = clss.image_amplitude_mask('cat.jpg',0.35)
+    plt.figure(figsize=(8, 4))
+    plt.subplot(1, 2, 1)
+    plt.title("Original Grayscale")
+    plt.imshow(img_array, cmap='gray')
+    
+    plt.subplot(1, 2, 2)
+    plt.title("Binary Amplitude Mask (1s and 0s)")
+    plt.imshow(amplitude_mask, cmap='gray')
     plt.show()
