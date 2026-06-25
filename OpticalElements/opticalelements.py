@@ -60,16 +60,20 @@ class OpticalElements():
         
         return phase
     
-    def image_amplitude_mask(self, filename:str,threshold):
+    def image_amplitude_mask(self, filename:str,threshold, grid_arr, grid_size, mask_size):
+        N= grid_arr.shape[0]
+        dx = grid_size/N
+        pixels = int(mask_size/dx)
         
-        img = Image.open(filename)
+        img = Image.open(filename).convert('L')
+        resize_img = img.resize((pixels, pixels))
+
+        img_array = np.array(resize_img) / 255
+        binary_arr = np.zeros_like(grid_arr, dtype=(float))
         
-        print(f'type is {type(img)}, {img.size}')
-        img_array = np.array(img) / 255
-        binary_arr = np.zeros_like(img_array, dtype=float)
-        binary_arr[img_array>threshold] = 1
-        binary_arr[img_array<threshold] = 0
-        
+        start_index = (N - pixels )//2
+        end_index = start_index+ pixels
+        binary_arr[start_index:end_index, start_index:end_index] = img_array
         return img_array, binary_arr
     
 if __name__ == '__main__':
@@ -85,7 +89,7 @@ if __name__ == '__main__':
     plt.colorbar()
     plt.show()
     
-    img_array, amplitude_mask = clss.image_amplitude_mask('cat.jpg',0.35)
+    img_array, amplitude_mask = clss.image_amplitude_mask('cat.jpg',0.35, X, 10E-3, 0.5E-3)
     plt.figure(figsize=(8, 4))
     plt.subplot(1, 2, 1)
     plt.title("Original Grayscale")
