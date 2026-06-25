@@ -236,19 +236,30 @@ class Modes():
         * np.exp(1j*k*z-(1+n+m)*np.arctan(z/self.rayleigh_length)+ (k*r**2)/2*R)
         return self.field_eq
     
+    def get_plot_scale(self, physical_size: float):
+        """
+        Evaluates the physical size (in meters) and returns the multiplier 
+        and the string unit label for plotting.
+        """
+        if physical_size >= 1.0:
+            return 1.0, "m"
+        elif physical_size >= 1e-3:
+            return 1e3, "mm"
+        elif physical_size >= 1e-6:
+            return 1e6, "µm"
+        else:
+            return 1e9, "nm"
+    
     def plot_field(self, plot_type: str):
         
-        xsize = format(self.grid_size[0],'f')
-        ysize = format(self.grid_size[1],'f')
-        
-        x_str = str(xsize)
-        y_str = str(ysize)
-        
-        x_decimal = len(x_str.split('.')[1])
-        y_decimal = len(y_str.split('.')[1])
-        
-        X = self.X*(10**x_decimal)
-        Y = self.Y*(10**y_decimal)
+        xsize = self.grid_size[0]
+        ysize = self.grid_size[1]
+
+        lx, ly = self.grid_size
+        scale_x, unit_x = self.get_plot_scale(xsize)
+        scale_y, unit_y = self.get_plot_scale(ysize)
+        X = self.X*scale_x
+        Y = self.Y*scale_y
         
         if plot_type == 'Amplitude':     
             plt.figure()
