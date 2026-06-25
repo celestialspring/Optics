@@ -42,3 +42,6 @@ An example of the inputs required in a .txt file is shown in the following:
 
 ![Alt text](./Example/circular_slit_diffraction.png)
 
+### Gaussian beam propagation through an amplitude mask and imaging at 2f of a lens
+
+![Alt text](./Example/Image_at_2f.png)
