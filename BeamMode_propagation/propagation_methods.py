@@ -90,7 +90,7 @@ class PropagationMethods():
      
         return self.S_shift
         
-    def rayleigh_sommerfeld_DI(self):
+    def rayleigh_sommerfeld_DI(self, propagation_length=None):
         """
          
         Calculates diffraction integral using FFT
@@ -104,8 +104,10 @@ class PropagationMethods():
             DESCRIPTION.
 
         """
-        
-        z = self.z_propagation
+        if propagation_length == None:
+            z = self.z_propagation
+        else:
+            z = propagation_length
         nx = ny = int(self.points)
         lx, ly = self.grid_size
         #unit sampling length or pixel size
@@ -154,19 +156,31 @@ class PropagationMethods():
         self.S_shift = S[ny-1:2*ny-1,nx-1:2*nx-1] # dx,dy=0 is at lower right somewhere near nx
         return self.S_shift
     
-    def plot_field(self, plot_type: str):
+    def get_plot_scale(self, physical_size: float):
+        """
+        Evaluates the physical size (in meters) and returns the multiplier 
+        and the string unit label for plotting.
+        """
+        if physical_size >= 1.0:
+            return 1.0, "m"
+        elif physical_size >= 1e-3:
+            return 1e3, "mm"
+        elif physical_size >= 1e-6:
+            return 1e6, "µm"
+        else:
+            return 1e9, "nm"
+    
+    def plot_field(self, plot_type: str, Field=None):
         
-        xsize = format(self.grid_size[0],'f')
-        ysize = format(self.grid_size[1],'f')
+        xsize = self.grid_size[0]
+        ysize = self.grid_size[1]
+
         lx, ly = self.grid_size
-        x_str = str(xsize)
-        y_str = str(ysize)
+        scale_x, unit_x = self.get_plot_scale(xsize)
+        scale_y, unit_y = self.get_plot_scale(ysize)
+        X = self.X*scale_x
+        Y = self.Y*scale_y
         
-        x_decimal = len(x_str.split('.')[1])
-        y_decimal = len(y_str.split('.')[1])
-       
-        X = self.X*(10**x_decimal)
-        Y = self.Y*(10**y_decimal)
         if plot_type == 'Amplitude':
           
             plt.figure()
@@ -185,6 +199,16 @@ class PropagationMethods():
             plt.xlabel('x')
             plt.ylabel('y')
             plt.title(f'HG mode {int(self.nm_order[0]),int(self.nm_order[1])} field intensity, z={self.z_propagation} m')
+            plt.show()
+        
+        if plot_type == 'Intensity of input field':
+            plt.figure()
+            field_intensity = abs(Field)**2
+            plt.imshow(field_intensity,extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)], cmap='cividis')
+            plt.colorbar(label='Intensity')
+            plt.xlabel('x (mm)')
+            plt.ylabel('y (mm)')
+            plt.title(f'Intensity at 2f')
             plt.show()
             
         if plot_type == 'Intensity norm':
