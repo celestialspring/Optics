@@ -205,6 +205,7 @@ class PropagationMethods():
             plt.figure()
             field_intensity = abs(Field)**2
             plt.imshow(field_intensity,extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)], cmap='cividis')
+            
             plt.colorbar(label='Intensity')
             plt.xlabel('x (mm)')
             plt.ylabel('y (mm)')
