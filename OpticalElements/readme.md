@@ -7,8 +7,8 @@
 
 # Optical elements
 
-The class OpticalElements contains functions to simulate optical elements such as slits. The example folder contains an example simulation
-of diffraction from rectangular and circular slits of a Hermite-Gaussian beam mode.
+The class OpticalElements contains functions to simulate optical elements such as lens and slits. The example folder contains an example simulation
+of diffraction from rectangular and circular slits of a Hermite-Gaussian beam mode. It also contains an example of beam propagation through an amplitude mask and lens imaging.
 
 
 ## Scripts
