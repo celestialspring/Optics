@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Gaussian Beam Propagation
+Gaussian Beam Propagation (free space)
 
 @author: SM
 """
