@@ -3,7 +3,7 @@
 This script simulates propagation of two Hermite-Gaussian modes specified in two config files.
 It calls methods from two classes: mode_class and propagation_methods
 
-@author: sandyM
+@author: SM
 """
 import mode_class
 import propagation_methods

@@ -7,7 +7,7 @@ field is simulated.
 
 The script also contains a function to evaluate overlap between two modes.
 
-@author: sandyM
+@author: SM
 """
 
 import tools
