@@ -4,34 +4,55 @@
 
 @author: SM
 """
+import numpy as np
+import GaussianBeam
 
-obj_space_dist = 100 #waist at f distance in object space
+#units in mm
+#Distance in the object space to lens
+obj_space_dist = 100 
+#f lens
 focallength = 50
+#imaging plane
 img = 1/focallength - 1/obj_space_dist
 img_space_dist = 1/img
+
+#units in mm
 wavelength = 0.000850
-beam2 = GaussianBeamPropagation(wavelength, 0.100)
-params = beam2.params
-x,x1,x2, z1,z2 = beam2.segmented_simulation_plane(obj_space_dist,img_space_dist)
-intensity1 = beam2.gaussian_field(x1,z1)
+waist = 0.100
+beam = GaussianBeam.GaussianBeamPropagation(wavelength, waist)
+params = beam.params
 z_dist_to_waist = 0
 w_0 = params['waist']
 z_r = params['rayleigh_range']
-q0 = beam2.define_q(z_dist_to_waist, z_r) 
-print(f'{q0} q0 and selfq {beam2.q}')
-  
-A,B,C,D = beam2.gaussian_single_lens_transform(obj_space_dist, focallength, img_space_dist)
-q1 = beam2.gaussian_ABCD(q0, A, B, C, D)
-  
-z_dist_to_newwaist, new_z_r = beam2.param_q(q1)
-  
-print(f'{z_dist_to_newwaist}:z_dist_to_newwaist, {new_z_r}: new_z_r,selfq {beam2.q}')
-beam2.update_params(0,0,new_z_r)
-beam2.gaussian_param(n=1)
+q0 = beam.define_q(z_dist_to_waist, z_r) #q parameter
+print(f'q0 is {beam.q}')
 
+#Define simulation plane based on obj and img distances  
+x,x1,x2, z1,z2 = beam.segmented_simulation_plane(obj_space_dist,img_space_dist)
+intensity1 = beam.gaussian_field(x1,z1)
 
-  # intensity2 = beam2.gaussian_field(x2,z2-obj_space_dist-img_space_dist+z_dist_to_newwaist)
-  # tot_intensity = np.hstack((intensity1,intensity2))
-  # z = np.hstack((z1,z2))/wavelength
+#Propagate the beam using ABCD matrix method
+A,B,C,D = beam.gaussian_single_lens_transform(obj_space_dist, focallength, img_space_dist)
+q1 = beam.gaussian_ABCD(q0, A, B, C, D)
+  
+#new q parameter after lens
+waist_to_currentdist, new_z_r = beam.param_q(q1)
+print(f'{waist_to_currentdist}:waist_to_currentdistance, {new_z_r}: new_z_r')
 
-  # beam2.plot('single lens propagation', tot_intensity,x/wavelength,z)
+#update object attributes associated to the new beam parameters
+beam.update_params(0,0,new_z_r)
+beam.gaussian_param(n=1)
+
+#the simulation plane is segmented. To the right of the lens, the maximum of intensity
+#is recentered to beam waist. The image space starts after object space:z-obj_space
+#The new waist appears at x distance from image plane: img_plane-Re(q1)
+  
+z2_recenter = z2 - obj_space_dist-img_space_dist+waist_to_currentdist
+intensity2 = beam.gaussian_field(x2,z2_recenter)
+
+#concatenate the two simulation planes
+tot_intensity = np.hstack((intensity1,intensity2))
+#normalize with wavelength
+Z = np.hstack((z1,z2))/wavelength
+X =  x/wavelength
+beam.plot('single lens propagation', tot_intensity,X,Z)
