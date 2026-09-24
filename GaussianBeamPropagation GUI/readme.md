@@ -9,7 +9,7 @@ Under modules, the GaussianBeam python script contains a class for simulating be
 
 ## Scripts
 - `GaussianBeam.py`: Class containing functions used for building a beam propagation simulation.
-- `Singlelens_gaussianbeal.py`: An example script that uses the Class script to build a single lens beam propagation simulation.
+- `Singlelens_gaussianbeal.py`: An example script that uses the class GaussianBeamPropagation to build a single lens beam propagation simulation.
 ## Python libraries 
 - numpy, matplotlib
 
