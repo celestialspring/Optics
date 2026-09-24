@@ -18,5 +18,4 @@ of how beam behaves under single lens transformation based on ABCD matrices and 
 All relevant inputs are given in mm.
 
 
-![Alt text](./Modules/Singlelens_example.png)
 
