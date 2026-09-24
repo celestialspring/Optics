@@ -9,12 +9,15 @@ import GaussianBeam
 
 #units in mm
 #Distance in the object space to lens
-obj_space_dist = 100 
+obj_space_dist = 100  
 #f lens
-focallength = 50
+focallength = 40 
 #imaging plane
 img = 1/focallength - 1/obj_space_dist
-img_space_dist = 1/img
+if img != 0:
+    img_space_dist = 1/img
+else:
+    img_space_dist = focallength
 
 #units in mm
 wavelength = 0.000850
