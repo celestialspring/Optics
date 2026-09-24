@@ -4,8 +4,7 @@
 
 # Gaussian Beam Propagation
 
-Under modules, the GaussianBeam python script contains a class for simulating beam propagation and calculating the relevant parameters. An example script gives an example 
-of how beam behaves under single lens transformation based on ABCD matrices and q-parameter. 
+Under modules, the GaussianBeam python script contains a class for simulating beam propagation and calculating the relevant parameters. An example script shows how beam behaves under single lens transformation based on ABCD matrices and q-parameter. 
 
 
 ## Scripts
